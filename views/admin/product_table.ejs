@@ -1,0 +1,101 @@
+<%- include('../includes/adminHeader.ejs') %>
+
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+                  <!-- <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
+                      For more information about DataTables, please visit the <a target="_blank"
+                          href="https://datatables.net">official DataTables documentation</a>.</p> -->
+                          <a href="/adminLogin/addCategory">
+                            <button  class="btn btn-primary">Add Category</button>
+                          </a>
+                          <hr>
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">User Data Tables</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <div style="width: 20%;">
+                                    <input type="search" id="myInput" class="form-control form-control-sm" placeholder="search" aria-controls="dataTable">
+                                </div>
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    
+                                    <thead>
+                                        <tr>
+                                            <td>ID</td>
+                                            <th>Product Name</th>
+                                            <th>Disscription</th>
+                                            <th>Price</th>
+                                            <th>Stock</th>
+                                            <!-- <th>Category</th> -->
+                                            <th>Image</th>
+                                            <!-- <th>Stock</th> -->
+                                            <th>Edit</th>
+                                            <th>Block/<br>Unblock</th>
+                                        </tr>
+                                    </thead>
+                                    <!-- <tfoot>
+                                        <tr>
+                                            <td>ID</td>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Number</th>
+                                            <th>Action</th>
+                                           
+                                        </tr>
+                                    </tfoot> -->
+                                    <tbody>
+                                        <% for(var i=0;i<products.length; i++){%>
+                                            <tr>
+                                                <td><%= i+1 %></td>
+                                                <td><%= products[i].productName %></td>
+                                                <td><%= products[i].description %></td>
+                                                <td><%= products[i].price %></td>
+                                                <td><%= products[i].stock %></td>
+                                                <!-- <td><%= products[i].category %></td> -->
+                                                <!-- <td><%= products[i].image %></td> -->
+                                                <td>
+                                                    <div style="width: 50px; height: 50px;">
+                                                        <img src="/user/images/<%= products[i].image %>" class="img-fluid" >
+                                                    </div>
+                                                    
+                                                </td>
+                                                <td>
+                                                    <a href="/adminLogin/editProduct?id=<%= products[i]._id %>" class="btn border-shadow update" style="color:rgb(50, 50, 255);">
+                                                        <span class="text-gradiant"><i class="fa fa-pencil"></i></span>
+                                                    </a>
+                                                </td>
+                                                <td >
+                                                    <!-- <a class="btn border-shadow delete" data-id=<%= products[i]._id%>
+                                                        <span class="text-gradiant"><i class="fa fa-times"></i></span>
+                                                    </a>  -->
+                                                    <% if(products[i].isVerified) { %>
+                                                        <a class="btn border-shadow ban" href="/adminLogin/block_product?id=<%= products[i]._id %>">
+                                                            <span class="text-gradiant-ban"><i class="fa fa-ban text-success "></i></span>
+                                                        </a>
+                                                        <% } else { %>
+                                                            <a class="btn border-shadow ban" href="/adminLogin/block_product?id=<%= products[i]._id %>">
+                                                                <span class="text-gradiant-ban"><i class="fa fa-ban  text-danger "></i></span>
+                                                            </a>
+                                                            <% } %>
+                                                </td>
+                                            </tr>
+                                            <%}%>   
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            
+    <%- include('../includes/adminFooter.ejs') %>
+

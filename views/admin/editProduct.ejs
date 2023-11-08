@@ -1,0 +1,54 @@
+<%- include('../includes/adminHeader.ejs') %>
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                
+                    <div class="container">
+                        <h1 class="mt-5 mb-4">Add a New Product</h1>
+                    <form   id="update_product">
+                            <!-- Product Name -->
+                            <div class="form-group">
+                                <label for="productName">Product Name</label>
+                                <input type="hidden" value="<%= product._id %>" name="id">
+                                <input type="text" class="form-control" id="productName" name="productName" value="<%= product.productName %>" required>
+                            </div>
+                
+                            <!-- Product Description -->
+                            <div class="form-group">
+                                <label for="description">Product Description</label>
+                                <input class="form-control" id="description" name="description" rows="3" value="<%= product.description %>"
+                                    required >
+                            </div>
+                
+                            <!-- Product Price -->
+                            <div class="form-group">
+                                <label for="price">Price</label>
+                                <input type="number" class="form-control" id="price" name="price" value="<%= product.price %>" required>
+                            </div>
+                
+                            <!-- Product category -->
+                          
+
+                            <!-- Product stock -->
+                            <div class="form-group">
+                                <label for="price">Stock</label>
+                                <input type="number" class="form-control" id="stock" name="stock" value="<%= product.stock %>" required>
+                            </div>
+                        
+                
+                            <!-- Product Image -->
+                            <div class="form-group">
+                                <label for="image">Product Image</label>
+                                <input type="file" class="form-control-file" id="image" name="image" accept="image/*"
+                                    >
+                                    
+                            </div>
+                
+                            <button type="submit" class="btn btn-primary">Add Product</button>
+                        </form>
+                    </div>
+                
+                </div>
+                <!-- /.container-fluid -->
+
+                <%- include('../includes/adminFooter.ejs') %>

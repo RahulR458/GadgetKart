@@ -1,0 +1,63 @@
+<%- include('../includes/adminHeader.ejs') %>
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                
+                    <div class="container">
+                        <h1 class="mt-5 mb-4">Add a New Product</h1>
+                        <form action="/api/product" method="post" id="add_product">
+                            <!-- Product Name -->
+                            <div class="form-group">
+                                <label for="productName">Product Name</label>
+                                <input type="text" class="form-control" id="productName" name="productName" required>
+                            </div>
+                
+                            <!-- Product Description -->
+                            <div class="form-group">
+                                <label for="description">Product Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="3"
+                                    required></textarea>
+                            </div>
+                
+                            <!-- Product Price -->
+                            <div class="form-group">
+                                <label for="price">Price</label>
+                                <input type="number" class="form-control" id="price" name="price" required>
+                            </div>
+                
+                            <!-- Product category -->
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <!-- <input type="text" class="form-control" id="category" name="category" required> -->
+                                <select class="form-control" id="category" name="category" >
+                                    <option>Select Option</option>
+                                    <% category.forEach(cat=>{  %>
+                                        <option value="<%= cat._id%>"><%= cat.categoryName%></option>
+                                        <% }) %>
+                                </select>
+                                
+                            </div>
+
+                            <!-- Product stock -->
+                            <div class="form-group">
+                                <label for="price">Stock</label>
+                                <input type="number" class="form-control" id="stock" name="stock" required>
+                            </div>
+                        
+                
+                            <!-- Product Image -->
+                            <div class="form-group">
+                                <label for="image">Product Image</label>
+                                <input type="file" class="form-control-file" id="image" name="image" accept="image/*"
+                                    required>
+                                    
+                            </div>
+                
+                            <button type="submit" class="btn btn-primary">Add Product</button>
+                        </form>
+                    </div>
+                
+                </div>
+                <!-- /.container-fluid -->
+
+                <%- include('../includes/adminFooter.ejs') %>
