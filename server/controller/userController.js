@@ -1,18 +1,26 @@
- var userDetail = require('../model/userModel');
+ let userDetail = require('../model/userModel');
+ const bcrypt = require('bcrypt');
+
 
  //ceate and save new user
- exports.create = (req,res)=>{
+ exports.create = async (req,res)=>{
     //validate request
     if(!req.body){
         res.status(400).send({message:"content cannot be empty!"});
         return;
     }
+
+    const {password}=req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(hashedPassword);
+
     //new user
     const user = new userDetail({
         name : req.body.name,
         email : req.body.email,
         number : req.body.number,
-        password : req.body.password,
+        password : hashedPassword,
         isVerified : true
     })
     //save user in database

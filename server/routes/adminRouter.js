@@ -19,7 +19,22 @@ route.get('/block_product',services.block_product)
 route.get('/editProduct', services.editProduct);
 route.get('/editCategory',services.editCategory)
 route.get('/block_category',services.block_category)
+route.get('/orderDetails',services.orderDetails)
+route.get('/addCoupon',services.addCoupon)
+route.get('/addOffer',services.addOffer)
+route.get('/coupon',services.couponTable)
+route.get('/offer',services.offerTable)
+route.get('/editCoupon',services.editCoupon)
+route.get('/editOffer',services.editOffer)
+route.get('/adminErrorPage',services.adminErrorPage)
+
 // route.get('/update-product', services.update_product);
+
+function abc(req,res,next){
+    console.log(1234567890)
+    next()
+}
+route.put('/status/change',abc,services.statusChange)
 
 
 // route.post('/api/categories',categoryController.create);

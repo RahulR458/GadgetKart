@@ -83,6 +83,7 @@ exports.create = async (req, res) => {
       price: req.body.price,
       description: req.body.description,
       category: req.body.category,
+      stock: req.body.stock,
       image: req.body.image,
     });
 

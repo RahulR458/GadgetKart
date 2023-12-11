@@ -19,7 +19,7 @@ const upload = multer({ storage: storage }).single('categoryImage'); // Use 'cat
 
 exports.create = (req, res) => {
   // Use the `upload` middleware to handle the file upload
-  upload(req, res, function (err) {
+  upload(req, res, async function (err) {
     if (err) {
       // Handle file upload error
       console.error('File upload error:', err);
@@ -37,6 +37,14 @@ exports.create = (req, res) => {
     
     if(!req.body.categoryImage){
       return res.status(400).json({message:"Category Image is required!"})
+    }
+
+    const categories = await Category.find({categoryName:req.body.categoryName});
+    console.log(categories+"....categories");
+    console.log(req.body.categoryName+"........req.body.categoryName");
+    // console.log(categories[0].categoryName+"....categories.categoryName");
+    if(req.body.categoryName === categories.categoryName){
+      return res.status(400).json({message:"Category Name is already exist!"})    
     }
  
     const category = new Category({
@@ -99,5 +107,6 @@ exports.update = async (req, res) => {
 //     res.status(400).json({ error: 'Failed to delete category' });
 //   }
 // };
+
 
 

@@ -12,9 +12,13 @@ $("#add_product").submit(function(event){
     alert("Data Inserted Successfully!")
 })
 
-// $("#update_product").submit(function(event){
-//     alert("Data Update Successfully!")
-// })
+$("#add_coupon").submit(function(event){
+    alert("Data Update Successfully!")
+})
+
+$("#add_offer").submit(function(event){
+    alert("Data Update Successfully!")
+})
 
 
 
