@@ -13,7 +13,7 @@
     const {password}=req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
+    console.log(hashedPassword+"...hashedPassword");
 
     //new user
     const user = new userDetail({
@@ -27,8 +27,8 @@
     user
     .save(user)
     .then(data=>{
-        // res.send(data)
-        res.redirect('/login')
+        res.json(data)
+        // res.redirect('/login')
     })
     .catch(err=>{
         res.status(500).send({

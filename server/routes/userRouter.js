@@ -2,6 +2,7 @@ const express = require("express");
 const route = express.Router()
 
 const services = require("../services/render");
+const middleware = require("../middleware/userAuth")
 const userController = require('../controller/userController');
 const categoryController = require('../controller/categoryController');
 const productController = require('../controller/productController');
@@ -10,20 +11,20 @@ const offerController = require("../controller/offerController")
 
 route.get("/",services.index);
 route.get("/products",services.product)
-route.get("/login",services.user_login)
-route.get("/signup",services.signup)
+route.get("/login",middleware.isLogout,services.user_login)
+route.get("/signup",middleware.isLogout,services.signup)
 route.get('/logout', services.logout_user);
-route.get('/forgot-password', services.forgot_password);
-route.get('/otp',services.sendOtp, services.otp);
-route.get('/confirm-password',services.confirmPassword)
-route.get('/shoppingCart',services.shoppingCart)
-route.get('/favourite',services.favourite)
+route.get('/forgot-password',middleware.isLogout, services.forgot_password);
+route.get('/otp',middleware.isLogout,services.sendOtp, services.otp);
+route.get('/confirm-password',middleware.isLogout,services.confirmPassword)
+route.get('/shoppingCart',middleware.isLogin,middleware.isVerified,services.shoppingCart)
+route.get('/favourite',middleware.isLogin,middleware.isVerified,services.favourite)
 route.get('/singleProduct',services.singleProduct)
-route.get('/checkOut',services.checkOut)
-route.get('/myAccount',services.myAccount)
-route.get('/orderSucces',services.orderSucces)
+route.get('/checkOut',middleware.isLogin,middleware.isVerified,services.checkOut)
+route.get('/myAccount',middleware.isLogin,middleware.isVerified,services.myAccount)
+route.get('/orderSucces',middleware.isLogin,middleware.isVerified,services.orderSucces)
 route.get('/404_errorPage',services.errorPage)
-route.get('/orderStatus',services.orderStatus)
+route.get('/orderStatus',middleware.isLogin,middleware.isVerified,services.orderStatus)
 
 
 route.post("/login",services.login)
@@ -40,6 +41,7 @@ route.post('/myAcountAddress',services.myAcount)
 route.post('/checkoutPost',services.checkoutPost)
 route.post('/poduct/pagination',services.pagination)
 route.post('/newPasswordPost',services.newPasswordPost)
+route.post('/order/succesPost/check',services.succesPostCheck)
 route.put('/couponPost',abc,services.couponPost)
 
 route.put('/addToCart',services.addToCart)
@@ -64,7 +66,7 @@ route.post('/api/coupon',couponController.create);
 route.post('/api/offer',offerController.create);
 
 
-route.post('/api/user',userController.create);
+route.post('/api/user',abc,userController.create);
 route.get('/api/user',userController.find);
 route.put('/api/user/:id',userController.update);
 route.delete('/api/user/:id',userController.delete);

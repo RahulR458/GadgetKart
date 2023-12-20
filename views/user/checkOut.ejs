@@ -316,7 +316,7 @@
             
             <div class="col-lg-5 col-md-5 col-xl-5 ">
                 <br>
-                <form action="/checkoutPost" method="post">
+                <form onsubmit=" odderPost();return false">
                 <div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
                     <h4 class="mtext-109 cl2 p-b-30">
                         Cart Totals
@@ -395,11 +395,11 @@
                         <label for="html">Razorpay</labe<input type="radio" id="html" name="fav_language" value="HTML"> -->
                             <div>
                                 <div style="display: flex; ">
-                                    <input type="radio" id="cod" name="paymentdt" value="cod">
+                                    <input type="radio" id="cod" name="paymentdt" value="cod" onclick="payments('Cash On Delivery')">
                                     <label for="cod" style="margin-top: 8px; margin-left: 4px;">Cash On Delivery</label>
                                 </div>
                                 <div style="display: flex; ">
-                                    <input type="radio" id="razorpay" name="paymentdt" value="razorpay">&nbsp;
+                                    <input type="radio" id="razorpay" name="paymentdt" value="razorpay" onclick="payments('razorpay')">&nbsp;
                                     <label for="razorpay" style="margin-top: 8px;">Razorpay</label>
                                 </div>
                                 
@@ -448,7 +448,7 @@
                             <a href="#">Edit <i class="icon-edit"></i></a></p>
                             
                             <div style="text-align: center; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                <input type="radio" id="selectAddress" name="address" value="<%= userAddress[i].id %>">   
+                                <input type="radio" id="selectAddress" name="address" onclick="address1('<%= userAddress[i]._id%>')" value="<%= userAddress[i].id %>">   
                                 <label for="selectAddress">Select Address</label>
                             </div>
                            
@@ -477,7 +477,20 @@
         </div>
     </div>
 <!-- </form> -->
-<script>
+<script> 
+let addressval ;
+    let paymentval ;
+
+	function address1(value){
+		addressval=value
+		console.log(addressval+"addressval")
+	}
+
+	function payments(value){
+		paymentval=value
+		console.log(paymentval+"payment")
+	}
+
     function couponPost(){
         let coupon = document.getElementById("coupon").value;
         console.log("coupon");
@@ -502,6 +515,109 @@
 
 					})
     }
+
+    function odderPost(){
+
+console.log(addressval)
+console.log(paymentval)
+
+fetch("/order/succesPost/check", {
+method: "post",
+headers: {
+    "Content-Type": "application/json",
+    // Add any other headers here if needed
+},
+body: JSON.stringify({}),
+})
+.then((response) => {
+    return response.json();
+
+})
+.then((data) => {
+    console.log(data);
+    if(data?.abc == "not"){
+        console.log("checkoutPost");
+        fetch("/checkoutPost", {
+method: "post",
+headers: {
+    "Content-Type": "application/json",
+    // Add any other headers here if needed
+},
+body: JSON.stringify({addresid:addressval,payment:paymentval}),
+})
+.then((response) => {
+    return response.json();
+
+})
+.then((data) => {
+    console.log(data);
+    if(data?.payment == "Cash On Delivery"){
+        window.location.href = '/orderSucces'
+    }else{
+        console.log('razopay order successful');
+        rpcall(data)
+    }
+    // if(data==quentityLess){
+    // 	quentityLess()
+    // }
+
+    // rpcall(data)
+    // Example usage:
+    // showToast('odder successfull!');
+})
+.catch((err) => console.log(err));
+    }else{
+        console.log("Product Not Available");
+    }
+    
+})
+.catch((err) => console.log(err));
+
+
+}
+
+
+    function rpcall(data){
+					var options = {
+    "key": "rzp_test_tNufqM4t9646Br", // Enter the Key ID generated from the Dashboard
+    "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Acme Corp",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": data.id, //This is a sample Order ID. Pass the id obtained in the response of Step 1
+    "handler": function (response){
+        alert(response.razorpay_payment_id);
+        alert(response.razorpay_order_id);
+        alert(response.razorpay_signature)
+    },
+    "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+
+var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+});
+rzp1.open();
+				}
+
+                
 </script>
 
 <%- include('../includes/footer.ejs') %>

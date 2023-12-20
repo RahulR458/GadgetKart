@@ -67,6 +67,12 @@ exports.create = async (req, res) => {
       return res.status(400).json({ error: 'Product details are incomplete' });
     }
 
+     // Check for duplicate product name
+     const existingProduct = await Product.findOne({ productName: req.body.productName });
+     if (existingProduct) {
+       return res.status(400).json({ error: 'Product with the same name already exists' });
+     }
+
     // Fetch existing categories
     const categories = await Category.find();
     

@@ -8,10 +8,68 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                        <button onclick="pdfdownloard()"  <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a></button>
+                        
                     </div>
-
+                    <div class="row" style="margin-bottom: 10px;margin-left: 1px;">
+                        <div class="card-deck col-md-12">
+                          <div style="margin-left: 5px;">
+                              <select name="" id="resultOption" aria-placeholder="choose" style="height: 100%;width: 150px;" onchange="resultOptions()"  >
+                                <option value="">choose</option>
+                                <option value="Yearly">Yearly</option>
+                                <option value="Monthly">Monthly</option>
+                                <option value="Weekly">Custom</option>
+                              </select>
+                          </div>
+                
+                          <div style="margin-left: 5px;" id="yearOption" onchange="fetchDataYear()">
+                            <select name="" id="yearSelect"  style="height: 100%;">
+                              <option value="2020">2020</option>
+                              <option value="2021">2021</option>
+                              <option value="2022">2022</option>
+                              <option value="2023">2023</option>
+                            </select>
+                        </div>
+                
+                          <div style="margin-left: 5px;" id="monthOption" onchange="fetchDataYear()">
+                              <select name="" id="monthSelect" style="height: 100%;">
+                                <option value="">Months</option>
+                                <option value="01">January</option>
+                                <option value="02">February</option>
+                                <option value="03">March</option>
+                                <option value="04">April</option>
+                                <option value="05">May</option>
+                                <option value="06">June</option>
+                                <option value="07">July</option>
+                                <option value="08">Aujust</option>
+                                <option value="09">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                              </select>
+                          </div>
+                
+                          <!-- <a href="/admin/pdf/downloard">pdf</a> -->
+                 
+                          <div id="weekOption1" style="margin-left: 25px;">
+                            <input type="date" id="customDate" onchange="fetchDataYear()">
+                          </div>
+                
+                          <!-- <div id="weekOption2" style="margin-left: 25px;">
+                            <span>End</span>
+                            <input type="date">
+                          </div> -->
+                
+                        
+                          <button onclick="pdfdownloard()" style="margin-left: 25px;" type="button" class="btn btn-info" id="pdfbtn" >PDF</button>
+                
+                          <div style="margin-left: 10px;" id="goto">
+                            
+                          </div>
+                
+                        </div>
+                    </div>
                     <!-- Content Row -->
                     <div class="row">
 
@@ -270,10 +328,152 @@
                     </div>
 
                     <!-- Content Row -->
-                    
+                    <div class="row" style="margin-top: 100px;">
+                        <canvas id="myChart" style=" margin-bottom: 50px;">
+                        </canvas>
+                    </div>
 
                 </div>
                 <!-- /.container-fluid -->
+
+                <script>
+                    function pdfdownloard() {
+                        fetch("/adminLogin/admin/pdf/download", {
+                            method: "post",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({}),
+                        })
+                            .then(response => response.blob())
+                            .then(blob => {
+                                // Create a download link for the PDF
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = 'report.pdf';
+                                a.click();
+
+                                // Clean up the URL object
+                                URL.revokeObjectURL(url);
+                            })
+                            .catch((err) => console.log(err));
+                    }
+
+                    
+                </script>
+                <script>
+                    addEventListener("DOMContentLoaded", function fetchfulldata() {
+                        const mode = 'full'
+                        const url = `adminLogin/admin/graph/data?id = ${ mode }`;
+
+                        const options = {
+                            method: 'POST',
+                            Headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ id: url })
+                        }
+                        const type = 'bar';
+                        const id = "myChart"
+                        fetchdata(url, options, type, id)
+                    });
+                </script>
+                <script>
+
+                    let monthOption = document.getElementById("monthOption");
+                    monthOption.style.display = "none";
+
+                    let yearOption = document.getElementById("yearOption");
+                    yearOption.style.display = "none";
+
+                    let weekOption1 = document.getElementById("weekOption1");
+                    weekOption1.style.display = "none";
+
+                    let pdfbtn = document.getElementById("pdfbtn");
+                    pdfbtn.style.display = "none";
+
+                    // let weekOption2 = document.getElementById("weekOption2");
+                    // weekOption2.style.display = "none";
+
+                    let goto = document.getElementById("goto");
+                    goto.style.display = "none";
+
+                    let moderes;
+                    let fetchYear;
+                    let fetchDataMonth;
+                    let fetchcustomDate;
+
+
+                    function resultOptions() {
+                        monthOption.style.display = "none";
+                        yearOption.style.display = "none";
+                        weekOption1.style.display = "none";
+                        pdfbtn.style.display = "none";
+                        // weekOption2.style.display = "none";
+                        goto.style.display = "none";
+
+                        let resultOption = document.getElementById("resultOption").value;
+                        moderes = resultOption
+                        console.log(resultOption + "resultOption")
+                        if (resultOption == "Yearly") {
+                            yearOption.style.display = "block"
+                            goto.style.display = "block"
+                        } else if (resultOption == "Monthly") {
+                            yearOption.style.display = "block"
+                            goto.style.display = "block"
+                            monthOption.style.display = "block"
+                            goto.style.display = "block"
+                        } else {
+                            weekOption1.style.display = "block"
+                            // weekOption2.style.display = "block"
+                            goto.style.display = "block"
+                        }
+                    }
+
+
+                    function fetchDataYear() {
+
+                        fetchYear = document.getElementById("yearSelect").value;
+                        fetchDataMonth = document.getElementById("monthSelect").value;
+                        fetchcustomDate = document.getElementById("customDate").value;
+                        pdfbtn.style.display = "block"
+
+                    }
+
+                    function pdfdownloard1() {
+
+                        console.log("start");
+                        console.log(fetchcustomDate)
+                        console.log("end");
+                        console.log(fetchYear + "fetchYear........")
+                        console.log(fetchDataMonth + "fetchDataMonth........");
+                        console.log(moderes, "modeee....")
+
+
+                        fetch("/admin/pdf/downloard", {
+                            method: "post",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ year: fetchYear, month: fetchDataMonth, mode: moderes, custom: fetchcustomDate }),
+                        })
+                            .then(response => response.blob())
+                            .then(blob => {
+                                // Create a download link for the PDF
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = 'report.pdf';
+                                a.click();
+
+                                // Clean up the URL object
+                                URL.revokeObjectURL(url);
+                            })
+                            .catch((err) => console.log(err));
+                    }
+
+                </script>
 
             
     <%- include('../includes/adminFooter.ejs') %>

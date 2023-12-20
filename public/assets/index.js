@@ -1,6 +1,6 @@
 
 $("#add_user").submit(function(event){
-    alert("Data Inserted Successfully!")
+    // alert("Data Inserted Successfully!")
 })
 
 
